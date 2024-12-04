@@ -1,12 +1,15 @@
+use std::fs;
+
 pub fn solve_1() -> u32 {
-    count_xmas(todo!());
-    todo!()
+    let input = read_day_4_input();
+    return count_xmas(input.as_str());
 }
 
 pub fn count_xmas(word_serach: &str) -> u32 {
     let matrix: Vec<Vec<char>> = word_serach
         .split("\n")
         .map(|s| s.chars().collect())
+        .filter(|s: &Vec<char>| s.len() > 0)
         .collect();
     let row_count = matrix.len();
     let column_count = matrix[0].len();
@@ -102,6 +105,7 @@ fn count_column(row: usize, column: usize, max_row: usize, matrix: &Vec<Vec<char
         && matrix[row - 1][column] == 'M'
         && matrix[row - 2][column] == 'A'
         && matrix[row - 3][column] == 'S';
+
     let exists_down = row + 3 < max_row
         && matrix[row][column] == 'X'
         && matrix[row + 1][column] == 'M'
@@ -112,6 +116,13 @@ fn count_column(row: usize, column: usize, max_row: usize, matrix: &Vec<Vec<char
     let down = if exists_down { 1 } else { 0 };
     return up + down;
 }
+
+fn read_day_4_input() -> String {
+    let contents = fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+    return contents;
+}
+
+static FILE_PATH: &str = "src/day_4-input.txt";
 
 #[cfg(test)]
 mod test {
@@ -126,6 +137,12 @@ mod test {
     fn test_2() {
         assert_eq!(count_xmas(TEST2), 18);
     }
+
+    #[test]
+    fn test_solve_1() {
+        assert_eq!(solve_1(), 2547);
+    }
+
     static TEST1: &str = "..X...
 .SAMX.
 .A..A.
