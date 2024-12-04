@@ -5,12 +5,13 @@ pub fn solve_1() -> u32 {
     return count_xmas(input.as_str());
 }
 
+pub fn solve_2() -> u32 {
+    let input = read_day_4_input();
+    return count_x_mas(input.as_str());
+}
+
 pub fn count_xmas(word_serach: &str) -> u32 {
-    let matrix: Vec<Vec<char>> = word_serach
-        .split("\n")
-        .map(|s| s.chars().collect())
-        .filter(|s: &Vec<char>| s.len() > 0)
-        .collect();
+    let matrix: Vec<Vec<char>> = matrix_from_string(word_serach);
     let row_count = matrix.len();
     let column_count = matrix[0].len();
 
@@ -32,6 +33,34 @@ pub fn count_xmas(word_serach: &str) -> u32 {
         })
         .sum();
     return r;
+}
+
+pub fn count_x_mas(word_search: &str) -> u32 {
+    let matrix: Vec<Vec<char>> = matrix_from_string(word_search);
+    let row_count = matrix.len();
+    let column_count = matrix[0].len();
+
+    let r = matrix
+        .iter()
+        .enumerate()
+        .map(|(row_index, cs)| {
+            cs.iter()
+                .enumerate()
+                .map(|(column_index, _)| {
+                    x_mes_count(row_index, column_index, row_count, column_count, &matrix)
+                })
+                .sum::<u32>()
+        })
+        .sum();
+    return r;
+}
+
+fn matrix_from_string(s: &str) -> Vec<Vec<char>> {
+    return s
+        .split("\n")
+        .map(|s| s.chars().collect())
+        .filter(|s: &Vec<char>| s.len() > 0)
+        .collect();
 }
 
 fn count_row(row: usize, column: usize, max_column: usize, matrix: &Vec<Vec<char>>) -> u32 {
@@ -117,6 +146,36 @@ fn count_column(row: usize, column: usize, max_row: usize, matrix: &Vec<Vec<char
     return up + down;
 }
 
+fn x_mes_count(
+    row: usize,
+    column: usize,
+    max_row: usize,
+    max_column: usize,
+    matrix: &Vec<Vec<char>>,
+) -> u32 {
+    let has_space_back = column >= 1;
+    let has_space_up = row >= 1;
+    let has_space_forward = column + 1 < max_column;
+    let has_space_down = row + 1 < max_row;
+    let has_space = has_space_down && has_space_forward && has_space_back && has_space_up;
+
+    let exists_backslash = has_space
+        && matrix[row][column] == 'A'
+        && (matrix[row - 1][column - 1] == 'M' && matrix[row + 1][column + 1] == 'S'
+            || matrix[row - 1][column - 1] == 'S' && matrix[row + 1][column + 1] == 'M');
+
+    let exists_slash = has_space
+        && matrix[row][column] == 'A'
+        && (matrix[row - 1][column + 1] == 'M' && matrix[row + 1][column - 1] == 'S'
+            || matrix[row - 1][column + 1] == 'S' && matrix[row + 1][column - 1] == 'M');
+
+    return if exists_backslash && exists_slash {
+        1
+    } else {
+        0
+    };
+}
+
 fn read_day_4_input() -> String {
     let contents = fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
     return contents;
@@ -143,6 +202,16 @@ mod test {
         assert_eq!(solve_1(), 2547);
     }
 
+    #[test]
+    fn test_3() {
+        assert_eq!(count_x_mas(TEST3), 9);
+    }
+
+    #[test]
+    fn test_solve_2() {
+        assert_eq!(solve_2(), 1939);
+    }
+
     static TEST1: &str = "..X...
 .SAMX.
 .A..A.
@@ -159,4 +228,15 @@ SMSMSASXSS
 SAXAMASAAA
 MAMMMXMMMM
 MXMXAXMASX";
+
+    static TEST3: &str = ".M.S......
+..A..MSMS.
+.M.S.MAA..
+..A.ASMSM.
+.M.S.M....
+..........
+S.S.S.S.S.
+.A.A.A.A..
+M.M.M.M.M.
+..........";
 }
