@@ -1,8 +1,11 @@
 use regex::Regex;
 use std::env;
+mod day_1;
 
 fn print_solution(day: &str, part: &str) {
     match (day, part) {
+        ("1", "1") =>     println!("Day 1, puzzle 1: {}", day_1::solve_1()),
+        ("1", "2") => println!("Day 1, puzzle 2: {}", day_1::solve_2()),
         ("4", "1") => println!("here could be the solution for day 4, part 1"),
         (d, p) => println!("No solution for day {} part {}", d, p),
     }
