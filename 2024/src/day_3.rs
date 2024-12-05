@@ -1,7 +1,9 @@
 use regex::Regex;
+use std::fs;
 
 pub fn solve_1() -> u32 {
-    todo!();
+    let contents = fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+    decorrupt_memory(contents.as_str())
 }
 
 pub fn solve_2() -> u32 {
@@ -24,6 +26,8 @@ pub fn decorrupt_memory(input: &str) -> u32 {
     return result;
 }
 
+static FILE_PATH: &str = "src/day_3-input.txt";
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -32,5 +36,10 @@ mod test {
     fn test_example() {
         let test_input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
         assert_eq!(self::decorrupt_memory(test_input), 161);
+    }
+
+    #[test]
+    fn test_solve_1() {
+        assert_eq!(solve_1(), 159892596);
     }
 }
