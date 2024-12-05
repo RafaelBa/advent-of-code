@@ -7,7 +7,8 @@ pub fn solve_1() -> u32 {
 }
 
 pub fn solve_2() -> u32 {
-    todo!();
+    let contents = fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+    decorrupt_enabled_memory(contents.as_str())
 }
 
 pub fn decorrupt_memory(input: &str) -> u32 {
@@ -24,6 +25,24 @@ pub fn decorrupt_memory(input: &str) -> u32 {
         })
         .sum();
     return result;
+}
+
+pub fn decorrupt_enabled_memory(input: &str) -> u32 {
+    let enabled_segments: Vec<&str> = find_enabled_segments(input);
+
+    enabled_segments.iter().map(|s| decorrupt_memory(s)).sum()
+}
+
+fn find_enabled_segments(input: &str) -> Vec<&str> {
+    // TODO: one approach is to collect all regexes of kind r"do\(\).*don't\(\)", the first via
+    // r"^do" - and then there's the last one, not sure how yet
+    // The first one will go up until "do", because from there the "do.*don't" should find that one
+    // anyway, and if the first "do" belongs to a don't, then I want to stop there, too.
+    // I might run into the issue that "do() mul(1,2) do() mul(2,3) don't()" might pick up mul(2,3)
+    // twice.
+    // How do I pick up the last "do()mul(2,3)don't()mul(0,0)do()mul(1,2)$" without picking up
+    // mul(2,3)?
+    todo!()
 }
 
 static FILE_PATH: &str = "src/day_3-input.txt";
