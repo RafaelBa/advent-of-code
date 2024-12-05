@@ -1,9 +1,15 @@
 use regex::Regex;
+use std::collections::HashMap;
 use std::fs;
 
 pub fn solve_1() -> i32 {
     let (vec1, vec2) = read_day_1_input();
     return sum_of_pair_distances(vec1, vec2);
+}
+
+pub fn solve_2() -> i32 {
+    let (vec1, vec2) = read_day_1_input();
+    return similarity_score(vec1, vec2);
 }
 
 pub fn sum_of_pair_distances(left: Vec<i32>, right: Vec<i32>) -> i32 {
@@ -17,6 +23,26 @@ pub fn sum_of_pair_distances(left: Vec<i32>, right: Vec<i32>) -> i32 {
         .iter()
         .zip(vec2.iter())
         .map(|(x, y)| (x - y).abs())
+        .sum();
+}
+
+pub fn similarity_score(left: Vec<i32>, right: Vec<i32>) -> i32 {
+    let mut right_count: HashMap<i32, i32> = HashMap::new();
+
+    right.iter().for_each(|n| {
+        let value: Option<&i32> = right_count.get(n);
+        match value {
+            Some(count) => right_count.insert(*n, count + 1),
+            None => right_count.insert(*n, 1),
+        };
+    });
+
+    return left
+        .iter()
+        .map(|n| {
+            let multiply = right_count.get(n).unwrap_or(&0);
+            n * multiply
+        })
         .sum();
 }
 
@@ -61,7 +87,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn solution_with_test_data() {
+    fn sum_of_pair_distances_with_test_data() {
         let vec1 = vec![3, 4, 2, 1, 3, 3];
         let vec2 = vec![4, 3, 5, 3, 9, 3];
 
@@ -70,8 +96,22 @@ mod tests {
     }
 
     #[test]
-    fn solution_with_data_from_file() {
+    fn sum_of_pair_distances_with_data_from_file() {
         let result = solve_1();
         assert_eq!(result, 2769675);
+    }
+
+    #[test]
+    fn test_similarity_test_data() {
+        let vec1 = vec![3, 4, 2, 1, 3, 3];
+        let vec2 = vec![4, 3, 5, 3, 9, 3];
+
+        let result = similarity_score(vec1, vec2);
+        assert_eq!(result, 31);
+    }
+
+    #[test]
+    fn test_similarity_with_data_from_file() {
+        assert_eq!(solve_2(), 24643097);
     }
 }
