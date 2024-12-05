@@ -1,6 +1,10 @@
 use regex::Regex;
 
-pub fn solve1() -> u32 {
+pub fn solve_1() -> u32 {
+    todo!();
+}
+
+pub fn solve_2() -> u32 {
     todo!();
 }
 
