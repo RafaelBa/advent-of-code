@@ -29,7 +29,22 @@ pub fn count_safe_reports(reports: &str) -> u32 {
 }
 
 pub fn count_safe_reports_with_dampener(reports: &str) -> u32 {
-    todo!();
+    let lines = reports.split('\n');
+    return lines
+        .filter(|line| line.len() > 0)
+        .map(|line| {
+            let levels = get_levels(line);
+            let dampened_level_reports = get_dampened_reports(&levels);
+            let is_safe = dampened_level_reports
+                .iter()
+                .any(|level_version| check_safety(level_version));
+            if is_safe {
+                1
+            } else {
+                0
+            }
+        })
+        .sum();
 }
 
 fn get_levels(line: &str) -> Vec<u32> {
@@ -77,6 +92,20 @@ fn abs_diff(left: &u32, right: &u32) -> u32 {
     };
 }
 
+fn get_dampened_reports(levels: &Vec<u32>) -> Vec<Vec<u32>> {
+    let versions: Vec<Vec<u32>> = (0..levels.len())
+        .map(|i| {
+            let mut new_levels = levels.clone();
+            new_levels.remove(i);
+            new_levels
+        })
+        .collect();
+
+    let mut result: Vec<Vec<u32>> = vec![levels.clone()];
+    result.extend(versions);
+    result.clone()
+}
+
 static FILE_PATH: &str = "src/day_2-input.txt";
 
 #[cfg(test)]
@@ -96,6 +125,11 @@ mod test {
     #[test]
     fn test_count_safe_reports_with_dampener() {
         assert_eq!(count_safe_reports_with_dampener(TEST_INPUT), 4);
+    }
+
+    #[test]
+    fn test_solve_2() {
+        assert_eq!(solve_2(), 476);
     }
 
     static TEST_INPUT: &str = "7 6 4 2 1
