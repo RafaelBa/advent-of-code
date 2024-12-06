@@ -1,8 +1,7 @@
-mod day_3;
-
 use regex::Regex;
 use std::env;
 mod day_1;
+mod day_3;
 mod day_4;
 
 fn text(day: &str, part: &str) -> String {
