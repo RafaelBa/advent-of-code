@@ -28,7 +28,7 @@ pub fn correct_middle_pages(input: &str) -> u32 {
 /// Parse string input to HashMap of instructions (X|Y) and list of updates (1,13,49,12)
 /// For the following algorithm the HashMap of instruction is flipped,
 /// so it is constructed as Y -> X
-fn parse_input<'a>(input: &'a str) -> (Instructions, Updates) {
+fn parse_input<'a>(input: &'a str) -> (Instructions<'a>, Updates<'a>) {
     let mut instructions: Instructions = HashMap::new();
     let mut updates: Updates = Vec::new();
 
@@ -74,7 +74,7 @@ fn check_update(update: &&Vec<&str>, instructions: &Instructions) -> bool {
     !(invalid_update_list.any(|c| c))
 }
 
-fn find_middle_page<'a>(update: &'a Vec<&'a str>) -> &str {
+fn find_middle_page<'a>(update: &'a Vec<&'a str>) -> &'a str {
     let pos = (update.len() - 1) / 2;
     update.iter().nth(pos).unwrap()
 }
@@ -106,6 +106,11 @@ mod test {
         let expected_middle_pages = vec!["61", "53", "29"];
 
         assert_eq!(middle_pages, expected_middle_pages)
+    }
+
+    #[test]
+    fn test_solve_1() {
+        assert_eq!(solve_1(), 5762);
     }
 
     static TEST_INPUT: &str = "47|53
