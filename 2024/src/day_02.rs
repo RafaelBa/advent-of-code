@@ -1,14 +1,12 @@
-use std::fs;
+use crate::read_input;
 
 pub fn solve_1() -> u32 {
-    let file_content =
-        fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+    let file_content = read_input::day(2);
     return count_safe_reports(file_content.as_str());
 }
 
 pub fn solve_2() -> u32 {
-    let file_content =
-        fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+    let file_content = read_input::day(2);
     return count_safe_reports_with_dampener(file_content.as_str());
 }
 
@@ -105,8 +103,6 @@ fn get_dampened_reports(levels: &Vec<u32>) -> Vec<Vec<u32>> {
     result.extend(versions);
     result.clone()
 }
-
-static FILE_PATH: &str = "src/day_2-input.txt";
 
 #[cfg(test)]
 mod test {

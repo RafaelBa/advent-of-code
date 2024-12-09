@@ -1,6 +1,6 @@
+use crate::read_input;
 use regex::Regex;
 use std::collections::HashMap;
-use std::fs;
 
 pub fn solve_1() -> i32 {
     let (vec1, vec2) = read_day_1_input();
@@ -47,7 +47,7 @@ pub fn similarity_score(left: Vec<i32>, right: Vec<i32>) -> i32 {
 }
 
 fn read_day_1_input() -> (Vec<i32>, Vec<i32>) {
-    let contents = fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
+    let contents = read_input::day(1);
     let lines = contents.split("\n");
     let re = Regex::new(r"([\d]+) +([\d]+)").unwrap();
 
@@ -78,9 +78,6 @@ fn read_day_1_input() -> (Vec<i32>, Vec<i32>) {
     });
     return (vec_left, vec_right);
 }
-
-// "hard coded" file path, expecting you to run the program from the rust project's root
-static FILE_PATH: &str = "src/day_1-input.txt";
 
 #[cfg(test)]
 mod tests {

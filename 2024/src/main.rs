@@ -1,10 +1,11 @@
 use regex::Regex;
 use std::env;
-mod day_1;
-mod day_2;
-mod day_3;
-mod day_4;
-mod day_5;
+mod day_01;
+mod day_02;
+mod day_03;
+mod day_04;
+mod day_05;
+mod read_input;
 
 fn text(day: &str, part: &str) -> String {
     return format!("Day {day}, puzzle {part}");
@@ -12,16 +13,16 @@ fn text(day: &str, part: &str) -> String {
 
 fn print_solution(day: &str, part: &str) {
     match (day, part) {
-        ("1", "1") => println!("Day 1, puzzle 1: {}", day_1::solve_1()),
-        ("1", "2") => println!("Day 1, puzzle 2: {}", day_1::solve_2()),
-        ("2", "1") => println!("{}: {}", text(day, part), day_2::solve_1()),
-        ("2", "2") => println!("{}: {}", text(day, part), day_2::solve_2()),
-        ("3", "1") => println!("{}: {}", text(day, part), day_3::solve_1()),
-        ("3", "2") => println!("{}: {}", text(day, part), day_3::solve_2()),
-        ("4", "1") => println!("{}: {}", text(day, part), day_4::solve_1()),
-        ("4", "2") => println!("{}: {}", text(day, part), day_4::solve_2()),
-        ("5", "1") => println!("{}: {}", text(day, part), day_5::solve_1()),
-        ("5", "2") => println!("{}: {}", text(day, part), day_5::solve_2()),
+        ("1", "1") => println!("Day 1, puzzle 1: {}", day_01::solve_1()),
+        ("1", "2") => println!("Day 1, puzzle 2: {}", day_01::solve_2()),
+        ("2", "1") => println!("{}: {}", text(day, part), day_02::solve_1()),
+        ("2", "2") => println!("{}: {}", text(day, part), day_02::solve_2()),
+        ("3", "1") => println!("{}: {}", text(day, part), day_03::solve_1()),
+        ("3", "2") => println!("{}: {}", text(day, part), day_03::solve_2()),
+        ("4", "1") => println!("{}: {}", text(day, part), day_04::solve_1()),
+        ("4", "2") => println!("{}: {}", text(day, part), day_04::solve_2()),
+        ("5", "1") => println!("{}: {}", text(day, part), day_05::solve_1()),
+        ("5", "2") => println!("{}: {}", text(day, part), day_05::solve_2()),
         (d, p) => println!("No solution for day {} part {}", d, p),
     }
 }

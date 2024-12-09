@@ -1,5 +1,5 @@
+use crate::read_input;
 use regex::Regex;
-use std::fs;
 
 pub fn solve_1() -> u32 {
     let contents = get_file_content();
@@ -42,12 +42,8 @@ fn sanitise_disabled_memory(input: String) -> String {
 }
 
 fn get_file_content() -> String {
-    fs::read_to_string(FILE_PATH)
-        .expect("Should have been able to read the file")
-        .replace("\n", "")
+    read_input::day(3).replace("\n", "")
 }
-
-static FILE_PATH: &str = "src/day_3-input.txt";
 
 #[cfg(test)]
 mod test {

@@ -1,12 +1,12 @@
-use std::fs;
+use crate::read_input;
 
 pub fn solve_1() -> u32 {
-    let input = read_day_4_input();
+    let input = read_input::day(4);
     return count_xmas(input.as_str());
 }
 
 pub fn solve_2() -> u32 {
-    let input = read_day_4_input();
+    let input = read_input::day(4);
     return count_x_mas(input.as_str());
 }
 
@@ -175,13 +175,6 @@ fn x_mes_count(
         0
     };
 }
-
-fn read_day_4_input() -> String {
-    let contents = fs::read_to_string(FILE_PATH).expect("Should have been able to read the file");
-    return contents;
-}
-
-static FILE_PATH: &str = "src/day_4-input.txt";
 
 #[cfg(test)]
 mod test {

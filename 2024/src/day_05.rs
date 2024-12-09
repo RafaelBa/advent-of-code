@@ -1,15 +1,15 @@
+use crate::read_input;
 use regex::Regex;
 use std::cmp::Ordering;
 use std::collections::HashMap;
-use std::fs;
 
 pub fn solve_1() -> u32 {
-    let contents = get_file_content();
+    let contents = read_input::day(5);
     correct_middle_pages(contents.as_str())
 }
 
 pub fn solve_2() -> u32 {
-    let contents = get_file_content();
+    let contents = read_input::day(5);
     fixed_incorrect_middle_page(contents.as_str())
 }
 
@@ -117,11 +117,6 @@ fn fix_update<'a, 'b>(
     });
     fixed_update
 }
-
-fn get_file_content() -> String {
-    fs::read_to_string(FILE_PATH).expect("Should have been able to read the file")
-}
-static FILE_PATH: &str = "inputs/day_5.txt";
 
 #[cfg(test)]
 mod test {
