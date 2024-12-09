@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fs;
 
@@ -8,7 +9,8 @@ pub fn solve_1() -> u32 {
 }
 
 pub fn solve_2() -> u32 {
-    todo!()
+    let contents = get_file_content();
+    fixed_incorrect_middle_page(contents.as_str())
 }
 
 type Instructions<'a> = HashMap<&'a str, Vec<&'a str>>;
@@ -21,6 +23,18 @@ pub fn correct_middle_pages(input: &str) -> u32 {
         .iter()
         .filter(|update| check_update(update, &instructions))
         .map(|update| find_middle_page(update))
+        .map(|page_number| page_number.parse::<u32>().unwrap())
+        .sum()
+}
+
+pub fn fixed_incorrect_middle_page(input: &str) -> u32 {
+    let (instructions, updates) = parse_input(input);
+
+    updates
+        .iter()
+        .filter(|update| !check_update(update, &instructions))
+        .map(|update| fix_update(update, &instructions))
+        .map(|update| find_middle_page(&update))
         .map(|page_number| page_number.parse::<u32>().unwrap())
         .sum()
 }
@@ -74,9 +88,34 @@ fn check_update(update: &&Vec<&str>, instructions: &Instructions) -> bool {
     !(invalid_update_list.any(|c| c))
 }
 
-fn find_middle_page<'a>(update: &'a Vec<&'a str>) -> &'a str {
+fn find_middle_page<'a, 'b>(update: &'a Vec<&'b str>) -> &'b str {
     let pos = (update.len() - 1) / 2;
     update.iter().nth(pos).unwrap()
+}
+
+fn fix_update<'a, 'b>(
+    update: &'b Vec<&'a str>,
+    instructions: &'a Instructions<'a>,
+) -> Vec<&'a str> {
+    let mut fixed_update = update.clone();
+
+    let are_in_wrong_order = |v1: &&str, v2: &&str| {
+        instructions
+            .get(v1)
+            .map(|vs| vs.contains(v2))
+            .unwrap_or(false)
+    };
+
+    fixed_update.sort_by(|a, b| {
+        if are_in_wrong_order(a, b) {
+            Ordering::Greater
+        } else if are_in_wrong_order(b, a) {
+            Ordering::Less
+        } else {
+            Ordering::Equal
+        }
+    });
+    fixed_update
 }
 
 fn get_file_content() -> String {
@@ -111,6 +150,54 @@ mod test {
     #[test]
     fn test_solve_1() {
         assert_eq!(solve_1(), 5762);
+    }
+
+    #[test]
+    fn test_fixed_incorrect_middle_page() {
+        assert_eq!(fixed_incorrect_middle_page(TEST_INPUT), 123);
+    }
+
+    #[test]
+    fn test_fixed_incorrect_update_fix() {
+        let (instructions, updates) = parse_input(TEST_INPUT);
+
+        let actual: Vec<Vec<&str>> = updates
+            .iter()
+            .filter(|update| !check_update(update, &instructions))
+            .map(|update| fix_update(update, &instructions))
+            .collect();
+
+        let expected = vec![
+            vec!["97", "75", "47", "61", "53"],
+            vec!["61", "29", "13"],
+            vec!["97", "75", "47", "29", "13"],
+        ];
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_fix_update() {
+        let (instructions, _) = parse_input(TEST_INPUT);
+        let result: Vec<Vec<&str>> = vec![
+            vec!["75", "97", "47", "61", "53"],
+            vec!["61", "13", "29"],
+            vec!["97", "13", "75", "29", "47"],
+        ]
+        .iter()
+        .map(|u| fix_update(u, &instructions))
+        .collect();
+
+        let expected = vec![
+            vec!["97", "75", "47", "61", "53"],
+            vec!["61", "29", "13"],
+            vec!["97", "75", "47", "29", "13"],
+        ];
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_solve_2() {
+        assert_eq!(solve_2(), 4130);
     }
 
     static TEST_INPUT: &str = "47|53
