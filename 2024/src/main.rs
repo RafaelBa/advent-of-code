@@ -5,6 +5,7 @@ mod day_02;
 mod day_03;
 mod day_04;
 mod day_05;
+mod day_06;
 mod read_input;
 
 fn text(day: &str, part: &str) -> String {
@@ -23,6 +24,8 @@ fn print_solution(day: &str, part: &str) {
         ("4", "2") => println!("{}: {}", text(day, part), day_04::solve_2()),
         ("5", "1") => println!("{}: {}", text(day, part), day_05::solve_1()),
         ("5", "2") => println!("{}: {}", text(day, part), day_05::solve_2()),
+        ("6", "1") => println!("{}: {}", text(day, part), day_06::solve_1()),
+        ("6", "2") => println!("{}: {}", text(day, part), day_06::solve_2()),
         (d, p) => println!("No solution for day {} part {}", d, p),
     }
 }
